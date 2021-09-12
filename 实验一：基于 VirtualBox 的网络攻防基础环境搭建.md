@@ -79,11 +79,19 @@
 
   - [x] 所有节点均可以访问互联网
 
+<<<<<<< HEAD
     攻击者浏览器访问爱奇艺
 
     ![att to iqiyi](img/ping_attoiqiyi.png)
 
     靶机XP1ping百度
+=======
+    攻击者浏览器访问爱奇艺![att to iqiyi](img/ping_attoiqiyi.png)
+
+    靶机XP1ping百度![xp1 to baidu](img/ping_xp1tobaidu.png)
+
+    靶机Kali1浏览器访问微博![ka1 to weibo](img/ping_ka1toweibo.png)
+>>>>>>> 6f1cdd9b65eb837bd7c8d032c54fba09ffdff772
 
     ![xp1 to baidu](img/ping_xp1tobaidu.png)
     
