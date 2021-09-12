@@ -1,10 +1,14 @@
 ## 实验一：基于 VirtualBox 的网络攻防基础环境搭建
 
+
+
 ### 实验目的
 
 - 掌握 VirtualBox 虚拟机的安装与使用；
 - 掌握 VirtualBox 的虚拟网络类型和按需配置；
 - 掌握 VirtualBox 的虚拟硬盘多重加载；
+
+
 
 ### 实验环境
 
@@ -12,6 +16,8 @@
 - 攻击者主机（Attacker）：Kali Rolling 2109.2
 - 网关（Gateway，GW）：Debian Buster
 - 靶机（Victim）：xp-sp3 / Kali
+
+
 
 ### 实验要求
 
@@ -22,6 +28,8 @@
   ![network layout](img/net.png)
 
 - 完成网络连通性测试
+
+
 
 ### 实验结果
 
@@ -79,6 +87,8 @@
 
     靶机XP2pingB站![xp2 to bilibili](img/ping_xp2tobilibili.png)
 
+
+
 ### 解决问题
 
 - 导入ova失败，报错无详细信息，是镜像包下载不完整，重新下载后解决
@@ -86,6 +96,8 @@
 - ![gw to att & 1](img/ping_gwtoall.png)
 
   首次pingXP时ping不通，关闭防火墙后解决
+
+
 
 ### 参考资料
 
