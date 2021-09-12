@@ -51,15 +51,15 @@
 
   - [x] 靶机可以直接访问攻击者主机
 
-    ![xp1 to att](img\ping_xp1toat.png)
+    ![xp1 to att](img/ping_xp1toat.png)
 
-    ![ka1 to att](img\ping_ka1toat.png)
+    ![ka1 to att](img/ping_ka1toat.png)
 
-    ![xp2 to at](img\ping_xp2toat.png)
+    ![xp2 to at](img/ping_xp2toat.png)
 
   - [x] 攻击者主机无法直接访问靶机
 
-    ![att to 1](img\ping_atto1.png)
+    ![att to 1](img/ping_atto1.png)
 
     ![att to 2](img/ping_atto2.png)
 
@@ -71,7 +71,7 @@
 
   - [x] 靶机的所有对外上下行流量必须经过网关
 
-    ![save pcap](img\ping_down.png)
+    ![save pcap](img/ping_down.png)
 
     ![copy pcap](img/scp.png)
 
@@ -79,11 +79,11 @@
 
   - [x] 所有节点均可以访问互联网
 
-    攻击者浏览器访问爱奇艺![att to iqiyi](img\ping_attoiqiyi.png)
+    攻击者浏览器访问爱奇艺![att to iqiyi](img/ping_attoiqiyi.png)
 
-    靶机XP1ping百度![xp1 to baidu](img\ping_xp1tobaidu.png)
+    靶机XP1ping百度![xp1 to baidu](img/ping_xp1tobaidu.png)
 
-    靶机Kali1浏览器访问微博![ka1 to weibo](img\ping_ka1toweibo.png)
+    靶机Kali1浏览器访问微博![ka1 to weibo](img/ping_ka1toweibo.png)
 
     靶机XP2pingB站![xp2 to bilibili](img/ping_xp2tobilibili.png)
 
