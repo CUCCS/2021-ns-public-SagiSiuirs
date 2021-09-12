@@ -25,7 +25,7 @@
 
 - 搭建满足如下拓扑图所示的虚拟机网络拓扑
 
-  ![network layout](img/net.png)
+  ![network layout](D:\hw\2021-ns-public-SagiSiuirs\img\net.png)
 
 - 完成网络连通性测试
 
@@ -35,7 +35,7 @@
 
 - 虚拟硬盘配置成多重加载
 
-  ![gateway](img/gateway.png)
+  ![gateway](D:\hw\2021-ns-public-SagiSiuirs\img\gateway.png)
 
 - 搭建虚拟机网络拓扑
 
@@ -51,31 +51,31 @@
 
   - [x] 靶机可以直接访问攻击者主机
 
-    ![xp1 to att](img/ping_xp1toat.png)
+    ![xp1 to att](D:\hw\2021-ns-public-SagiSiuirs\img\ping_xp1toat.png)
 
-    ![ka1 to att](img/ping_ka1toat.png)
+    ![ka1 to att](D:\hw\2021-ns-public-SagiSiuirs\img\ping_ka1toat.png)
 
-    ![xp2 to at](img/ping_xp2toat.png)
+    ![xp2 to at](D:\hw\2021-ns-public-SagiSiuirs\img\ping_xp2toat.png)
 
   - [x] 攻击者主机无法直接访问靶机
 
-    ![att to 1](img/ping_atto1.png)
+    ![att to 1](D:\hw\2021-ns-public-SagiSiuirs\img\ping_atto1.png)
 
-    ![att to 2](img/ping_atto2.png)
+    ![att to 2](D:\hw\2021-ns-public-SagiSiuirs\img\ping_atto2.png)
 
   - [x] 网关可以直接访问攻击者主机和靶机
 
-    ![gw to att & 1](img/ping_gwtoall.png)
+    ![gw to att & 1](D:\hw\2021-ns-public-SagiSiuirs\img\ping_gwtoall.png)
 
-    ![gw to 2](img/ping_gwto2.png)
+    ![gw to 2](D:\hw\2021-ns-public-SagiSiuirs\img\ping_gwto2.png)
 
   - [x] 靶机的所有对外上下行流量必须经过网关
 
-    ![save pcap](img/ping_down.png)
+    ![save pcap](D:\hw\2021-ns-public-SagiSiuirs\img\ping_down.png)
 
-    ![copy pcap](img/scp.png)
+    ![copy pcap](D:\hw\2021-ns-public-SagiSiuirs\img\scp.png)
 
-    ![wireshark](img/wireshark.png)
+    ![wireshark](D:\hw\2021-ns-public-SagiSiuirs\img\wireshark.png)
 
   - [x] 所有节点均可以访问互联网
 
@@ -83,14 +83,16 @@
     攻击者浏览器访问爱奇艺
 
     ![att to iqiyi](img/ping_attoiqiyi.png)
-
+    
     靶机XP1ping百度
+
 =======
-    攻击者浏览器访问爱奇艺![att to iqiyi](img/ping_attoiqiyi.png)
+    攻击者浏览器访问爱奇艺![att to iqiyi](D:\hw\2021-ns-public-SagiSiuirs\img\ping_attoiqiyi.png)
 
     靶机XP1ping百度![xp1 to baidu](img/ping_xp1tobaidu.png)
-
+    
     靶机Kali1浏览器访问微博![ka1 to weibo](img/ping_ka1toweibo.png)
+
 >>>>>>> 6f1cdd9b65eb837bd7c8d032c54fba09ffdff772
 
     ![xp1 to baidu](img/ping_xp1tobaidu.png)
@@ -109,7 +111,7 @@
 
 - 导入ova失败，报错无详细信息，是镜像包下载不完整，重新下载后解决
 
-- ![gw to att & 1](img/ping_gwtoall.png)
+- ![gw to att & 1](D:\hw\2021-ns-public-SagiSiuirs\img\ping_gwtoall.png)
 
   首次pingXP时ping不通，关闭防火墙后解决
 
