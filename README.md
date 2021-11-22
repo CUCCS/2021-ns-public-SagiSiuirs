@@ -40,7 +40,7 @@
 
   `ip link show eth0`
 
-  ![](img-c4\link_show_eth0.png)
+  ![](img-c4/link_show_eth0.png)
 
 - 在攻击者上打开scapy，输入以下命令
 
@@ -48,11 +48,11 @@
 
   无法执行
 
-  ![](img-c4\before_sudo.png)
+  ![](img-c4/before_sudo.png)
 
   权限不足，`exit`退出scapy后，sudo重启并运行命令
 
-  ![](img-c4\att-sca-1.png)
+  ![](img-c4/att-sca-1.png)
 
 - 回到受害者主机上开启网卡的混杂模式
 
@@ -62,13 +62,13 @@
 
   `ip link show eth0`
 
-  ![](img-c4\promisc.png)
+  ![](img-c4/promisc.png)
 
   输出结果多了`PROMISC`选项，即开启了混杂模式
 
 - 在攻击者scapy继续执行命令，并观察两次输出的差异
 
-  ![](img-c4\att-sca-2.png)
+  ![](img-c4/att-sca-2.png)
 
   发现在受害者开启混杂模式后，攻击者检测到了受害者混杂模式的开启
 
@@ -104,11 +104,11 @@
 
     `sendp(arpspoofed)`
 
-  ![](img-c4\arpbroadcast.png)
+  ![](img-c4/arpbroadcast.png)
 
 - 查看受害者的ARP缓存
 
-  ![](img-c4\neigh1.png)
+  ![](img-c4/neigh1.png)
 
   发现网关的MAC地址已经被替换为攻击者的MAC地址，说明毒害受害者ARP缓存成功
 
@@ -128,7 +128,7 @@
 
 - 查看受害者的ARP缓存，已经成功恢复
 
-  ![](img-c4\neigh2.png)
+  ![](img-c4/neigh2.png)
 
 #### 实验三：使用自动化工具完成ARP投毒劫持实验
 
@@ -136,19 +136,19 @@
 
   - 安装arpspoof
 
-    ![](img-c4\install_arpspoof.png)
+    ![](img-c4/install_arpspoof.png)
 
   - 劫持命令：
 
     `sudo arpspoof -i eth0 -t 172.16.111.137<想要劫持的目标主机> 172.16.111.1<想要伪装成的主机ip>`
 
-    ![](D:\hw\2021-ns-public-SagiSiuirs\img-c4\arpspoofatt.png)
+    ![](D:/hw/2021-ns-public-SagiSiuirs/img-c4/arpspoofatt.png)
 
     可见完成了ARP投毒劫持
 
   - Ctrl+C终止劫持，有自动恢复目标主机ARP缓存的过程
 
-    ![](img-c4\cleanup.png)
+    ![](img-c4/cleanup.png)
 
 #### 实验四：基于scapy编写ARP投毒劫持工具
 
@@ -221,7 +221,7 @@
 
 - 在攻击者主机运行该python程序：
 
-  ![](img-c4\tool_python.png)
+  ![](img-c4/tool_python.png)
 
 ### 参考资料
 
