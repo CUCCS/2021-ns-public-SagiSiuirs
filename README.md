@@ -142,7 +142,7 @@
 
     `sudo arpspoof -i eth0 -t 172.16.111.137<想要劫持的目标主机> 172.16.111.1<想要伪装成的主机ip>`
 
-    ![](D:/hw/2021-ns-public-SagiSiuirs/img-c4/arpspoofatt.png)
+    ![](img-c4/arpspoofatt.png)
 
     可见完成了ARP投毒劫持；Ctrl+C终止劫持，有自动恢复目标主机ARP缓存的过程
 
