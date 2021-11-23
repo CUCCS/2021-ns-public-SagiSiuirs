@@ -144,11 +144,8 @@
 
     ![](D:/hw/2021-ns-public-SagiSiuirs/img-c4/arpspoofatt.png)
 
-    可见完成了ARP投毒劫持
+    可见完成了ARP投毒劫持；Ctrl+C终止劫持，有自动恢复目标主机ARP缓存的过程
 
-  - Ctrl+C终止劫持，有自动恢复目标主机ARP缓存的过程
-
-    ![](img-c4/cleanup.png)
 
 #### 实验四：基于scapy编写ARP投毒劫持工具
 
