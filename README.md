@@ -100,11 +100,13 @@ lsof -i 4 -L -P -n//查看处于监听状态的端口
 
 #### TCP connect scan
 
-- 攻击者向靶机发送SYN包，如果能完成三次握手（收到ACK），则端口为开放状态；如果只收到一个RST包，则端口为关闭状态；如果什么都没有收到，则端口为过滤状态
+- 攻击者向靶机发送SYN包，如果能完成三次握手（收到ACK），则端口为开放状态；
+- 如果只收到一个RST包，则端口为关闭状态；
+- 如果什么都没有收到，则端口为过滤状态。
 
 ##### 实验代码
 
-```shell
+```python
 #! /usr/bin/python
 
 from scapy.all import *
@@ -173,6 +175,104 @@ elif ret.haslayer(TCP):
   ![](img-c5/nmap_open.png)
 
 #### TCP stealth scan
+
+- 与connect scan相似，Attacker向靶机发送SYN包，如果端口开启，就会收到SYN/ACK响应包，但此时Attacker会向靶机发送RST数据包，来避免完成TCP三次握手，从而避免防火墙的探测；
+- 如果端口关闭，Attacker会收到RST数据包；
+- 如果端口处于过滤状态，则没有数据包返回，或者收到数据包的ICMP错误包，并显示不可达错误`type = 3 code 1,2,3,9,10,13`。
+
+##### 实验代码
+
+```python
+#! /usr/bin/python
+
+from scapy.all import *
+
+
+def tcpstealthscan(dst_ip, dst_port, timeout=10):
+    pkts = sr1(IP(dst=dst_ip)/TCP(dport=dst_port, flags="S"), timeout=10)
+    if (pkts is None):
+        print("Filtered")
+    elif(pkts.haslayer(TCP)):
+        if(pkts.getlayer(TCP).flags == 0x12):
+            send_rst = sr(IP(dst=dst_ip) /
+                          TCP(dport=dst_port, flags="R"), timeout=10)
+            print("Open")
+        elif (pkts.getlayer(TCP).flags == 0x14):
+            print("Closed")
+        elif(pkts.haslayer(ICMP)):
+            if(int(pkts.getlayer(ICMP).type) == 3 and int(stealth_scan_resp.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
+                print("Filtered")
+
+
+tcpstealthscan('172.16.111.137', 8888)
+```
+
+##### Closed
+
+- ![](img-c5/run_TCPstl_clo.png)
+
+- 发现靶机发送的数据报为RST/ACK数据包，说明端口关闭
+
+  ![](img-c5/cap_TCP_stl.png)
+
+- nmap复刻结果
+
+  ![](img-c5/nmap_close_stl.png)
+
+##### Filtered
+
+- ![](img-c5/run_TCPstl_fil.png)
+
+- 靶机只收到了一个TCP包，没有遇到发送错误ICMP包的情况，仍然可以说明端口是关闭的
+
+  ![](img-c5/cap_fil_stl.png)
+
+- ![](img-c5/nmap_filter_stl.png)
+
+##### Open
+
+- ![](img-c5/run_TCPstl_open.png)
+
+- 靶机发送了SYN/ACK数据包，说明端口开启；靶机收到了Attacker发送的RST数据包，说明进行了SYN扫描
+
+  ![](img-c5/cap_open_stl.png)
+
+- ![](img-c5/nmap_open_stl.png)
+
+#### TCP Xmas scan
+
+- 在Xmas扫描中，Attacker发送的TCP数据包中设置PSH、FIN和URG位
+
+  | Probe Response                                         | Assigned State |
+  | ------------------------------------------------------ | -------------- |
+  | No response received(even after retransmissions)       | open\|filtered |
+  | TCP RST packet                                         | closed         |
+  | ICMP unreachable error(type 3, code 1,2,3,9,10, or 13) | filtered       |
+
+##### 实验代码
+
+```python
+#! /usr/bin/python
+
+from scapy.all import *
+
+dst_ip = "172.16.111.137"
+dst_port=8888
+
+ret = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags="FPU"),timeout=10)
+if ret is None:
+	print("Open|Filtered")
+elif ret.haslayer(TCP):
+	if ret[1].flags == 0x14:
+		print("Closed")
+elif ret.haslayer(ICMP):
+	if int(ret[1].getlayer(ICMP).type)==3 and int(ret[1].getlayer(ICMP).code) in [1,2,3,9,10,13]:
+		print("Filtered")
+```
+
+##### Closed
+
+
 
 ### 参考资料
 
