@@ -12,13 +12,13 @@
 
 ### 实验要求
 
-- [ ]  TCP connect scan / TCP stealth scan
-- [ ]  TCP Xmas scan / TCP fin scan / TCP null scan
-- [ ]  UDP scan
-- [ ]  上述每种扫描技术的实现测试均需要测试端口状态为：`开放`、`关闭` 和 `过滤` 状态时的程序执行结果
-- [ ]  提供每一次扫描测试的抓包结果并分析与课本中的扫描方法原理是否相符？如果不同，试分析原因；
-- [ ]  在实验报告中详细说明实验网络环境拓扑、被测试 IP 的端口状态是如何模拟的
-- [ ]  （可选）复刻 `nmap` 的上述扫描技术实现的命令行参数开关（每种扫描测试一种状态，且后面专门用nmap进行了扫描实验）
+- [x]  TCP connect scan / TCP stealth scan
+- [x]  TCP Xmas scan / TCP fin scan / TCP null scan
+- [x]  UDP scan
+- [x]  上述每种扫描技术的实现测试均需要测试端口状态为：`开放`、`关闭` 和 `过滤` 状态时的程序执行结果
+- [x]  提供每一次扫描测试的抓包结果并分析与课本中的扫描方法原理是否相符？如果不同，试分析原因；
+- [x]  在实验报告中详细说明实验网络环境拓扑、被测试 IP 的端口状态是如何模拟的
+- [x]  （可选）复刻 `nmap` 的上述扫描技术实现的命令行参数开关（每种扫描测试一种状态，且后面专门用nmap进行了扫描实验）
 
 ### 实验原理及补充
 
@@ -41,31 +41,6 @@
 > - Closed：`ICMP error type 3 and code 3`
 > - filtered：`no response / ICMP error type 3 and code 1,2,3,9,10,13`。
 
-#### Scapy基础
-
-```shell
-# 导入模块
-from scapy.all import *
-# 查看包信息
-pkt = IP(dst="")
-ls(pkt)
-pkt.show()
-summary(pkt)
-# 发送数据包
-send(pkt)  # 发送第三层数据包，但不会受到返回的结果。
-sr(pkt)  # 发送第三层数据包，返回两个结果，分别是接收到响应的数据包和未收到响应的数据包。
-sr1(pkt)  # 发送第三层数据包，仅仅返回接收到响应的数据包。
-sendp(pkt)  # 发送第二层数据包。
-srp(pkt)  # 发送第二层数据包，并等待响应。
-srp1(pkt)  # 发送第二层数据包，并返回响应的数据包
-# 监听网卡
-sniff(iface="wlan1",count=100,filter="tcp")
-# 应用：简单的SYN端口扫描 （测试中）
-pkt = IP("...")/TCP(dport=[n for n in range(22, 3389)], flags="S")
-ans, uans = sr(pkt)
-ans.summary() # flag为SA表示开放，RA表示关闭
-```
-
 #### Kali端口命令
 
 ```shell
@@ -85,6 +60,28 @@ sudo iptables -A INPUT -p tcp --dport 8888 -j DROP
 nc -l -p 8888
 lsof -i 4 -L -P -n//查看处于监听状态的端口
 ```
+
+#### 端口状态模拟
+
+> - 关闭状态：对应端口没有开启监听, 防火墙没有开启。
+>
+>   ```shell
+>   ufw disable
+>   ```
+>
+> - 开启状态：对应端口开启监听: apache2基于TCP, 在80端口提供服务; DNS服务基于UDP,在53端口提供服务。防火墙处于关闭状态。
+>
+>   ```shell
+>   systemctl start apache2 # port 80
+>   systemctl start dnsmasq # port 53
+>   ```
+>
+> - 过滤状态：对应端口开启监听, 防火墙开启。
+>
+>   ```shell
+>   ufw enable && ufw deny 80/tcp
+>   ufw enable && ufw deny 53/udp
+>   ```
 
 ### 实验过程
 
@@ -272,9 +269,225 @@ elif ret.haslayer(ICMP):
 
 ##### Closed
 
+- ![](img-c5/run_TCPx_clo.png)
 
+- Attacker发送了RST/ACK数据包，说明端口关闭
+
+  ![](img-c5/cap_x_clo.png)
+
+- ![](img-c5/nmap_close_xm.png)
+
+##### Filtered
+
+- ![](img-c5\run_TCPx_fil.png)
+
+- 靶机只收到一个TCP包，没有响应，说明端口处于过滤或开启状态
+
+  ![](img-c5\cap_x_fil.png)
+
+- ![](img-c5\nmap_fil_xm.png)
+
+##### Open
+
+- ![](img-c5\run_TCPx_open.png)
+
+- 靶机只收到一个TCP包，没有响应，说明端口处于过滤或开启状态
+
+  ![](img-c5\cap_x_open.png)
+
+- ![](img-c5\nmap_open_xm.png)
+
+#### TCP fin scan
+
+- 在Attacker发送TCP数据包时仅设置TCP FIN位；
+- 端口判断与Xmas scan一致
+
+##### 实验代码
+
+```python
+#! /usr/bin/python
+
+from scapy.all import *
+
+dst_ip = "172.16.111.137"
+dst_port=8888
+
+ret = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags="F"),timeout=10)
+if ret is None:
+	print("Open|Filtered")
+elif ret.haslayer(TCP):
+	if ret[1].flags == 0x14:
+		print("Closed")
+elif ret.haslayer(ICMP):
+	if int(ret[1].getlayer(ICMP).type)==3 and int(ret[1].getlayer(ICMP).code) in [1,2,3,9,10,13]:
+		print("Filtered")
+```
+
+##### Closed
+
+- ![](img-c5\run_TCPfin_clo.png)
+
+- Attacker发送了RST/ACK数据包，说明端口关闭
+
+  ![](img-c5\cap_fin_clo.png)
+
+- ![](img-c5\nmap_close_fin.png)
+
+##### Filtered
+
+- ![](img-c5\run_TCPfin_fil.png)
+
+- 靶机只收到一个TCP包，并且没有响应，说明端口处于过滤或开启状态
+
+  ![](img-c5\cap_fin_fil.png)
+
+- ![](img-c5\nmap_fil_fin.png)
+
+##### Open
+
+- ![](img-c5\run_TCPfin_open.png)
+
+- 靶机只收到一个TCP包，没有响应，说明端口处于过滤或开启状态
+
+  ![](img-c5\cap_fin_open.png)
+
+- ![](img-c5\nmap_open_fin.png)
+
+#### TCP null scan
+
+- 在Attacker发送TCP数据包时不设置任何位；
+- 端口判断与Xmas scan一致
+
+##### 实验代码
+
+```python
+#! /usr/bin/python
+
+from scapy.all import *
+
+dst_ip = "172.16.111.137"
+dst_port=8888
+
+ret = sr1(IP(dst=dst_ip)/TCP(dport=dst_port,flags=""),timeout=10)
+if ret is None:
+	print("Open|Filtered")
+elif ret.haslayer(TCP):
+	if ret[1].flags == 0x14:
+		print("Closed")
+elif ret.haslayer(ICMP):
+	if int(ret[1].getlayer(ICMP).type)==3 and int(ret[1].getlayer(ICMP).code) in [1,2,3,9,10,13]:
+		print("Filtered")
+```
+
+##### Closed
+
+- ![](img-c5\run_TCPnull_clo.png)
+
+- Attacker发送了RST/ACK包，说明端口关闭
+
+  ![](img-c5\cap_cull_clo.png)
+
+- ![](img-c5\nmap_close_null.png)
+
+##### Filtered
+
+- ![](img-c5\run_TCPnull_fil.png)
+
+- 靶机只收到一个TCP包且没有响应，说明端口处于过滤或开启状态
+
+  ![](img-c5\cap_null_fil.png)
+
+- ![](img-c5\nmap_fil_null.png)
+
+##### Open
+
+- ![](img-c5\run_TCPnull_open.png)
+
+- 靶机只收到一个TCP包且没有响应，说明端口处于过滤或开启状态
+
+  ![](img-c5\cap_null_open.png)
+
+- ![](img-c5\nmap_open_null.png)
+
+#### UDP scan
+
+- UDP是一种无连接的传输协议，不保证数据包一定到达目的地；
+- Attacker收到来自靶机的UDP响应包时，说明端口开启；
+- 同时若没有得到响应，端口也可能处于开启或过滤状态；
+- 如果收到ICMP端口不可达错误，说明端口关闭；
+- 如果收到其他ICMP错误，说明端口处于过滤状态
+
+##### 实验代码
+
+```python
+#! /usr/bin/python
+
+from scapy.all import *
+
+dst_ip="172.16.111.137"
+dst_port=53
+
+pkt = IP(dst=dst_ip)/UDP(dport=dst_port)
+ret = sr1(pkt,timeout=10)
+if ret is None:
+	print("Open|Filtered")
+elif ret.haslayer(UDP):
+	print("Open")
+elif ret.haslayer(ICMP):
+	if int(ret.getlayer(ICMP).type)==3 and int(ret.getlayer(ICMP).code)==3:
+		print("Close")
+	elif int(ret.getlayer(ICMP).type)==3 and int(ret.getlayer(ICMP).code) in [1,2,9,10,13]:
+		print("Filtered")
+elif ret.haslayer(IP) and ret.getlayer(IP).proto == 17:
+        print("Open")
+```
+
+##### Closed
+
+- ![](img-c5\run_UDP_clo.png)
+
+- 靶机收到Attacker发送的UDP数据包，并发送了ICMP端口不可达的数据包，在ICMP数据中Type和code都为3，说明端口关闭
+
+  ![](img-c5\cap_udp_clo.png)
+
+- ![](img-c5\nmap_close_UDP.png)
+
+##### Filtered
+
+- ![](img-c5\run_UDP_fil.png)
+
+- 靶机接收到Attacker发送的UDP数据包，但没有做出响应，说明端口处于过滤状态
+
+  ![](img-c5\cap_udp_fil.png)
+
+- ![](img-c5\nmap_fil_UDP.png)
+
+##### Open
+
+- 安装dnsmasq工具
+
+  ![](img-c5\install_dnsmasq.png)
+
+  开启端口
+
+  ![](img-c5\dsn_allow_fil.png)
+
+- 靶机接受了Attacker发送的UDP数据包并发送了响应包，说明端口开启
+
+  ![](img-c5\cap_udp_open.png)
+
+- ![](img-c5\nmap_open_UDP.png)
+
+### 问题与解决
+
+- 模拟窗口状态：检查工具是否安装`sudo apt install`
+- nmap命令：偶尔报错，可能需要调整参数，更普遍的是提升权限`sudo nmap -sS -p`
 
 ### 参考资料
 
 - [课本第五章](https://c4pr1c3.gitee.io/cuc-ns/chap0x05/main.html)
+- [Linux kali开启端口、关闭防火墙](https://blog.csdn.net/qq_42103479/article/details/90111365)
+- [Port Scanning Using Scapy](https://resources.infosecinstitute.com/port-scanning-using-scapy/)
+- [scapy2.4.4文档](https://scapy.readthedocs.io/en/latest/)
+- [吕九洋师哥的作业](https://github.com/CUCCS/2020-ns-public-LyuLumos/tree/ch0x05/ch0x05#udp-scan)
 
