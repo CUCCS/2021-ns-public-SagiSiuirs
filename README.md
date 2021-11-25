@@ -242,7 +242,7 @@ tcpstealthscan('172.16.111.137', 8888)
 
   | Probe Response                                         | Assigned State |
   | ------------------------------------------------------ | -------------- |
-  | No response received(even after retransmissions)       | open\|filtered |
+  | No response received(even after retransmissions)       | open/|filtered |
   | TCP RST packet                                         | closed         |
   | ICMP unreachable error(type 3, code 1,2,3,9,10, or 13) | filtered       |
 
@@ -279,23 +279,23 @@ elif ret.haslayer(ICMP):
 
 ##### Filtered
 
-- ![](img-c5\run_TCPx_fil.png)
+- ![](img-c5/run_TCPx_fil.png)
 
 - 靶机只收到一个TCP包，没有响应，说明端口处于过滤或开启状态
 
-  ![](img-c5\cap_x_fil.png)
+  ![](img-c5/cap_x_fil.png)
 
-- ![](img-c5\nmap_fil_xm.png)
+- ![](img-c5/nmap_fil_xm.png)
 
 ##### Open
 
-- ![](img-c5\run_TCPx_open.png)
+- ![](img-c5/run_TCPx_open.png)
 
 - 靶机只收到一个TCP包，没有响应，说明端口处于过滤或开启状态
 
-  ![](img-c5\cap_x_open.png)
+  ![](img-c5/cap_x_open.png)
 
-- ![](img-c5\nmap_open_xm.png)
+- ![](img-c5/nmap_open_xm.png)
 
 #### TCP fin scan
 
@@ -325,33 +325,33 @@ elif ret.haslayer(ICMP):
 
 ##### Closed
 
-- ![](img-c5\run_TCPfin_clo.png)
+- ![](img-c5/run_TCPfin_clo.png)
 
 - Attacker发送了RST/ACK数据包，说明端口关闭
 
-  ![](img-c5\cap_fin_clo.png)
+  ![](img-c5/cap_fin_clo.png)
 
-- ![](img-c5\nmap_close_fin.png)
+- ![](img-c5/nmap_close_fin.png)
 
 ##### Filtered
 
-- ![](img-c5\run_TCPfin_fil.png)
+- ![](img-c5/run_TCPfin_fil.png)
 
 - 靶机只收到一个TCP包，并且没有响应，说明端口处于过滤或开启状态
 
-  ![](img-c5\cap_fin_fil.png)
+  ![](img-c5/cap_fin_fil.png)
 
-- ![](img-c5\nmap_fil_fin.png)
+- ![](img-c5/nmap_fil_fin.png)
 
 ##### Open
 
-- ![](img-c5\run_TCPfin_open.png)
+- ![](img-c5/run_TCPfin_open.png)
 
 - 靶机只收到一个TCP包，没有响应，说明端口处于过滤或开启状态
 
-  ![](img-c5\cap_fin_open.png)
+  ![](img-c5/cap_fin_open.png)
 
-- ![](img-c5\nmap_open_fin.png)
+- ![](img-c5/nmap_open_fin.png)
 
 #### TCP null scan
 
@@ -381,33 +381,33 @@ elif ret.haslayer(ICMP):
 
 ##### Closed
 
-- ![](img-c5\run_TCPnull_clo.png)
+- ![](img-c5/run_TCPnull_clo.png)
 
 - Attacker发送了RST/ACK包，说明端口关闭
 
-  ![](img-c5\cap_cull_clo.png)
+  ![](img-c5/cap_cull_clo.png)
 
-- ![](img-c5\nmap_close_null.png)
+- ![](img-c5/nmap_close_null.png)
 
 ##### Filtered
 
-- ![](img-c5\run_TCPnull_fil.png)
+- ![](img-c5/run_TCPnull_fil.png)
 
 - 靶机只收到一个TCP包且没有响应，说明端口处于过滤或开启状态
 
-  ![](img-c5\cap_null_fil.png)
+  ![](img-c5/cap_null_fil.png)
 
-- ![](img-c5\nmap_fil_null.png)
+- ![](img-c5/nmap_fil_null.png)
 
 ##### Open
 
-- ![](img-c5\run_TCPnull_open.png)
+- ![](img-c5/run_TCPnull_open.png)
 
 - 靶机只收到一个TCP包且没有响应，说明端口处于过滤或开启状态
 
-  ![](img-c5\cap_null_open.png)
+  ![](img-c5/cap_null_open.png)
 
-- ![](img-c5\nmap_open_null.png)
+- ![](img-c5/nmap_open_null.png)
 
 #### UDP scan
 
@@ -444,39 +444,39 @@ elif ret.haslayer(IP) and ret.getlayer(IP).proto == 17:
 
 ##### Closed
 
-- ![](img-c5\run_UDP_clo.png)
+- ![](img-c5/run_UDP_clo.png)
 
 - 靶机收到Attacker发送的UDP数据包，并发送了ICMP端口不可达的数据包，在ICMP数据中Type和code都为3，说明端口关闭
 
-  ![](img-c5\cap_udp_clo.png)
+  ![](img-c5/cap_udp_clo.png)
 
-- ![](img-c5\nmap_close_UDP.png)
+- ![](img-c5/nmap_close_UDP.png)
 
 ##### Filtered
 
-- ![](img-c5\run_UDP_fil.png)
+- ![](img-c5/run_UDP_fil.png)
 
 - 靶机接收到Attacker发送的UDP数据包，但没有做出响应，说明端口处于过滤状态
 
-  ![](img-c5\cap_udp_fil.png)
+  ![](img-c5/cap_udp_fil.png)
 
-- ![](img-c5\nmap_fil_UDP.png)
+- ![](img-c5/nmap_fil_UDP.png)
 
 ##### Open
 
 - 安装dnsmasq工具
 
-  ![](img-c5\install_dnsmasq.png)
+  ![](img-c5/install_dnsmasq.png)
 
   开启端口
 
-  ![](img-c5\dsn_allow_fil.png)
+  ![](img-c5/dsn_allow_fil.png)
 
 - 靶机接受了Attacker发送的UDP数据包并发送了响应包，说明端口开启
 
-  ![](img-c5\cap_udp_open.png)
+  ![](img-c5/cap_udp_open.png)
 
-- ![](img-c5\nmap_open_UDP.png)
+- ![](img-c5/nmap_open_UDP.png)
 
 ### 问题与解决
 
