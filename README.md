@@ -183,7 +183,7 @@
 
 ### 参考资料
 
-- [谌雯馨师姐的实验记录](https://blog.csdn.net/lemonalla/article/details/105592309?spm=1001.2014.3001.5501)
+- [谌谌师姐的实验记录](https://blog.csdn.net/lemonalla/article/details/105592309?spm=1001.2014.3001.5501)
 - [网络入侵检测--Snort软件配置文件snort.conf详解](https://blog.csdn.net/baidu_19348579/article/details/121337818)
 
 - [课本](https://c4pr1c3.github.io/cuc-ns/chap0x09/exp.html)
